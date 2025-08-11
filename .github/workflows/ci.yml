@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: [8.4]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl, dom, curl, json
+          tools: composer:v2
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: Set PHPCS installed_paths
+        run: ./vendor/bin/phpcs --config-set installed_paths vendor/pekral/phpcs-rules,vendor/slevomat/coding-standard
+      - name: Run code style check (composer check)
+        run: composer check
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: [8.4]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl, dom, curl, json
+          tools: composer:v2
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+      - name: Set PHPCS installed_paths
+        run: ./vendor/bin/phpcs --config-set installed_paths vendor/pekral/phpcs-rules,vendor/slevomat/coding-standard
+      - name: Run tests
+        run: composer test
