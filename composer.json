@@ -13,12 +13,12 @@
   ],
   "scripts": {
     "check": [
-      "phpcs --standard=phpcs-rules src/ tests/",
+      "phpcs --standard=vendor/pekral/phpcs-rules/ruleset.xml src/ tests/",
       "phpstan analyse src/ --level=max --memory-limit=1G",
       "./vendor/bin/pint --test"
     ],
     "fix": [
-      "phpcbf --standard=phpcs-rules src/ tests/",
+      "phpcbf --standard=vendor/pekral/phpcs-rules/ruleset.xml src/ tests/",
       "rector process src/ tests/ --config=vendor/pekral/rector-rules/rector.php",
       "./vendor/bin/pint --parallel"
     ],
